@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="Js/angular.min.js"></script>
+    <script type="text/css" src="css/home.css"></script>
+    <script src="Js/birds.js"></script>
+    <title>Bird Sighting Application</title>
+</head>
+<body ng-app="birdApp" ng-controller="birdController" ng-init="getData()">
+
+<!-- Adding Navigation Bar -->
+<nav class="navbar navbar-inverse">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <div class="navbar-brand" id="homePage"></div>
+        </div>
+        <ul class="nav navbar-nav">
+            <!-- To make tabs toggleable, added the data-toggle attribute -->
+            <li class="active"><a href="#birdspecies" data-toggle="pill">Bird Species</a></li>
+            <li><a href="#birdsighting" data-toggle="pill">Bird Sighting</a></li>
+        </ul>
+    </div>
+</nav>
+
+
+<!-- Species -->
+
+<div class="container">
+
+    <!-- Adding Content to Tabs using tab-content class -->
+
+    <div class="tab-content">
+        <div id="birdspecies" class="tab-pane fade in active">
+            <h3>Bird Species</h3>
+
+            <div class="panel panel-primary">
+                <div class="panel-heading">Add/Delete/Edit/Update Bird Species</div>
+                <div class="panel-body">This Page Adds or Updates or Deletes or fetch details of a Bird Species.
+                    We are using Mongo as a Database to store our Data
+                </div>
+
+
+
+            </div>
+
+            <div class="span7">
+                <div class="widget stacked widget-table action-table">
+
+                    <div class="widget-header">
+                        <i class="icon-th-list"></i>
+                        <h1 style="text-align: center">Bird Species Details</h1>
+                    </div> <!-- /widget-header -->
+
+                    <div class="widget-content">
+                        <br>
+                        <br>
+
+                        <table class="table table-striped table-bordered">
+                            <thead>
+                            <tr>
+                                <th style="text-align: left">Name</th>
+                                <th style="text-align: left">Size</th>
+                                <th style="text-align: left">Color</th>
+                                <th style="text-align: left">Weight</th>
+                                <th style="text-align: left">Modify/Delete</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr ng-repeat="bird in birdList">
+                                <td><input  type='text' ng-model='bird.Name'></td>
+                                <td><input  type='text' ng-model='bird.Size'></td>
+                                <td><input  type='text' ng-model='bird.Color'></td>
+                                <td><input  type='text' ng-model='bird.Weight'></td>
+                                <td>
+                                    <button class="goButton" ng-click="updateBirdSpecies(bird)">Edit</button>
+                                    <button class="goButton" ng-click="deleteBirdSpecies(bird._id)">Delete</button>
+                                </td>
+                            </tr>
+
+                            </tbody>
+                        </table>
+
+                        <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#birdSpeciesModal" style="background: darkblue;
+		width: 100%;
+		padding: 2px;
+		font-size: 1.3em;
+		letter-spacing:1px;
+		color: #fff;
+		margin: 10px 0 10px;">Add a new Bird Species</button>
+                    </div> <!-- /widget-content -->
+
+                </div> <!-- /widget -->
+            </div>
+        </div>
+
+        <!-- Modal -->
+        <div class="modal fade" id="birdSpeciesModal" role="dialog">
+            <div class="modal-dialog">
+
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Add New Bird Species</h4>
+                    </div>
+                    <div class="modal-body">
+
+                        <div class="container">
+                            <h2>Add New Bird Species</h2>
+                            <form class="form-horizontal">
+                                <div class="form-group">
+                                    <label class="col-sm-1 control-label">Name</label>
+                                    <div class="col-sm-3">
+                                        <input class="form-control" id="name" ng-model="name" type="text" placeholder="Enter Name">
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-sm-1 control-label">Size</label>
+                                    <div class="col-sm-3">
+                                        <input class="form-control" id="size" ng-model="size" type="text" placeholder="Enter Size">
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-sm-1 control-label">Color</label>
+                                    <div class="col-sm-3">
+                                        <input class="form-control" id="color" ng-model="color" type="text" placeholder="Enter Color">
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-sm-1 control-label">Weight</label>
+                                    <div class="col-sm-3">
+                                        <input class="form-control" id="weight" ng-model="weight" type="text" placeholder="Enter Weight">
+                                    </div>
+                                </div>
+
+                                <button ng-click="addBirdSpecies()" style="text-align: center"  class="btn btn-primary">Add Bird Species</button>
+
+                            </form>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div id="birdsighting" class="tab-pane fade" ng-init="getSightingData()">
+            <h3>Bird Sighting</h3>
+
+            <div class="panel panel-primary">
+                <div class="panel-heading">Add/Delete/Edit/Update Bird Sighting</div>
+                <div class="panel-body">This Page Adds or Updates or Deletes or fetches details of a Bird Sighting.
+                    We are using Mongo as a Database to store our Data
+                </div>
+            </div>
+
+            <div class="span7">
+                <div class="widget stacked widget-table action-table">
+
+                    <div class="widget-header">
+                        <i class="icon-th-list"></i>
+                        <h1 style="text-align: center">Bird Sighting Details</h1>
+                    </div> <!-- /widget-header -->
+
+                    <div class="widget-content">
+                        <br>
+                        <br>
+
+                        <table class="table table-striped table-bordered">
+                            <thead>
+                            <tr>
+                                <th style="text-align: left">Bird Species</th>
+                                <th style="text-align: left">Date and Time</th>
+                                <th style="text-align: left">Location</th>
+                                <th style="text-align: left">Modify/Delete</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr ng-repeat="bird in birdSightList">
+                                <td><input  type='text' contenteditable="false" ng-model='bird.BirdSpecie'></td>
+                                <td><input  type='text' ng-model='bird.DateTime'></td>
+                                <td><input  type='text' ng-model='bird.Location'></td>
+                                <td>
+                                    <button class="goButton" ng-click="updateBirdSighting(bird)">Edit</button>
+                                    <button class="goButton" ng-click="deleteBirdSighting(bird._id)">Delete</button>
+                                </td>
+                            </tr>
+
+                            </tbody>
+                        </table>
+
+                        <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#birdSightingModal"  style="background: darkblue;
+		width: 100%;
+		padding: 2px;
+		font-size: 1.3em;
+		letter-spacing:1px;
+		color: #fff;
+		margin: 10px 0 10px;">Add a new Bird Sighting</button>
+                    </div> <!-- /widget-content -->
+
+                </div> <!-- /widget -->
+            </div>
+
+        </div>
+
+        <!-- Modal -->
+        <div class="modal fade" id="birdSightingModal" role="dialog">
+            <div class="modal-dialog">
+
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Add New Bird Sighting</h4>
+                    </div>
+                    <div class="modal-body">
+
+                        <div class="container">
+                            <h2>Add New Bird Sighting</h2>
+                            <form class="form-horizontal">
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">Bird Species</label>
+                                    <div class="col-sm-3">
+                                        <input class="form-control" id="bsname" ng-model="bsname" type="text" placeholder="Enter Bird Species Name">
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">Date & Time</label>
+                                    <div class="col-sm-3">
+                                        <input class="form-control" id="dateTime" ng-model="dateTime" type="text" placeholder="Enter Date & Time">
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">Location</label>
+                                    <div class="col-sm-3">
+                                        <input class="form-control" id="location" ng-model="location" type="text" placeholder="Enter Location">
+                                    </div>
+                                </div>
+
+                                <button ng-click="addBirdSighting()" style="text-align: center"  class="btn btn-primary">Add Bird Sighting</button>
+
+                            </form>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+
+    </div>
+</div>
+
+</body>
+</html>
